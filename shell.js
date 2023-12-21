@@ -14,6 +14,34 @@ const client = new Client({
     puppeteer: { headless: false }, 
     authStrategy: new LocalAuth()
 });
+const targetContactNumber = '0732499844';
+
+
+
+client.on('message', (message) => {
+    // Check if the message is from the target contact
+    if (message.from === `${targetContactNumber}@c.us`) {
+        handleTargetContactMessage(message);
+    }
+});
+
+function handleTargetContactMessage(message) {
+    // Implement logic to handle messages from the target contact
+    const replyMessage = generateReply(message.body);
+    client.sendMessage(message.from, replyMessage);
+}
+
+function generateReply(messageText) {
+    // Implement your specific logic to generate a reply based on the received message
+    if (messageText.toLowerCase() === 'hello') {
+        return 'Hi there!';
+    } else if (messageText.toLowerCase() === 'help') {
+        return 'I am a chatbot. You can ask me questions!';
+    } else {
+        return 'I didn\'t understand that. Please ask me something else.';
+    }
+}
+
 
 console.log('Initializing...');
 
@@ -34,3 +62,5 @@ client.on('ready', () => {
         await client.destroy();
     });
 });
+
+
